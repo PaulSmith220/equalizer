@@ -47,10 +47,10 @@
               span.css({
                   verticalAlign: 'bottom',
                   display: 'inline-block',
-      
+      			
                   fontSize: 0,
                   lineHeight: 0,
-      
+      			  height: '100%',
                   width: colWidth,
                   background: 'pink',
                   borderTop: '2px solid red'
@@ -60,20 +60,30 @@
           run_equalizer(selector, timeout);
       }
       
+      function colsHeightChange(selector, timeout) {
+      	var colHeight = Math.round(selector.parent().height() * Math.random());
+
+      	selector.animate({
+      		height: colHeight
+      	}, timeout/2,
+	      	'linear',
+	      	function() {
+	      		selector.animate({
+	      			height:  selector.parent().height()/2
+	      		}, timeout/2,
+	      			'linear',
+	      			function() {
+	      				colsHeightChange($(this), timeout);
+	      			}
+	      		);
+	      	}
+      	)
+      }
+
       function run_equalizer (selector, timeout) {
-          $(selector + ' span').each(function (i) {
-              var colHeight = Math.round($(selector).height() * Math.random());
-              $(this).height(colHeight);
+          $(selector + ' span').each(function (i) { 
+          	colsHeightChange($(this), timeout);
           });
-      
-          $(selector + ' span').animate(
-              {height: $(selector).height()/2},
-              timeout,
-              'linear',
-              function () {
-                  run_equalizer(selector, timeout);
-              }
-          );
       }
       
       window.onload = function () {
